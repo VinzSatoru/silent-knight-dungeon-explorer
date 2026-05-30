@@ -708,6 +708,9 @@ function gameLoop(timestamp) {
 
             // Spike Traps
             for (let spike of spikes) {
+                // Logic Culling: skip if too far from player
+                if (Math.abs(spike.x - player.x) > 1500) continue;
+                
                 if (spike.cooldown > 0) { spike.cooldown--; continue; }
                 if (checkCollision(player, spike)) {
                     player.takeDamage(spike.damage);
@@ -720,6 +723,9 @@ function gameLoop(timestamp) {
             // Update Musuh
             let attackBox = player.getAttackBox();
             for (let enemy of enemies) {
+                // Logic Culling: skip physics and AI if too far from player
+                if (Math.abs(enemy.x - player.x) > 1500) continue;
+
                 enemy.update(TIME_STEP, player, platforms);
 
                 if (enemy.isDead) continue;

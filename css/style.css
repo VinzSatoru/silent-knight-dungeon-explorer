@@ -439,9 +439,10 @@ button:active {
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    width: 420px;
-    height: 420px;
-    padding: 55px 45px 50px 45px;
+    width: clamp(280px, 90vw, 420px);
+    aspect-ratio: 1 / 1; /* Automatically keep it square based on width */
+    max-height: 90vh; /* Prevent it from being taller than the screen */
+    padding: clamp(30px, 10%, 55px) clamp(20px, 8%, 45px); /* Responsive padding */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -467,7 +468,7 @@ button:active {
 }
 
 .settings-layout h2 {
-    font-size: 18px;
+    font-size: clamp(14px, 4vw, 18px); /* Responsive font size */
     color: #ffd700;
     text-shadow: 3px 3px 0 #000;
     margin: 0 0 15px 0;
@@ -612,7 +613,7 @@ button:active {
 }
 
 .end-popup-wrapper h2 {
-    font-size: 18px;
+    font-size: clamp(14px, 4vw, 24px);
     margin-bottom: 15px;
     text-shadow: 3px 3px 0 #000;
     letter-spacing: 2px;

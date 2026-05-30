@@ -811,24 +811,54 @@ function drawGame() {
     ctx.scale(SCALE_FACTOR, SCALE_FACTOR);
     drawBackground();
 
+    // Frustum Culling Bounding Box (Camera view + padding)
+    let cullPadding = 300; // Ekstra 300px agar tidak ada efek pop-in
+    let viewLeft = camX - cullPadding;
+    let viewRight = camX + logicalWidth() + cullPadding;
+    
+    // Helper function for culling
+    function isVisible(obj) {
+        if (!obj) return false;
+        let w = obj.width || (obj.radius ? obj.radius * 2 : 0) || obj.size || 50;
+        return (obj.x + w >= viewLeft && obj.x <= viewRight);
+    }
+
     // Draw Moving Platforms
-    for (let mp of (typeof movingPlatforms !== 'undefined' ? movingPlatforms : [])) mp.draw(ctx, camX, camY);
+    for (let mp of (typeof movingPlatforms !== 'undefined' ? movingPlatforms : [])) {
+        if (isVisible(mp)) mp.draw(ctx, camX, camY);
+    }
 
     // Draw Environment
-    for (let img of (typeof images !== 'undefined' ? images : [])) img.draw(ctx, camX, camY);
-    for (let p of (typeof platforms !== 'undefined' ? platforms : [])) p.draw(ctx, camX, camY);
-    for (let spike of (typeof spikes !== 'undefined' ? spikes : [])) spike.draw(ctx, camX, camY);
-    for (let c of (typeof coins !== 'undefined' ? coins : [])) c.draw(ctx, camX, camY);
-    for (let hp of (typeof healthPotions !== 'undefined' ? healthPotions : [])) hp.draw(ctx, camX, camY);
-    for (let ch of (typeof chests !== 'undefined' ? chests : [])) ch.draw(ctx, camX, camY);
-    if (typeof portal !== 'undefined' && portal) portal.draw(ctx, camX, camY);
+    for (let img of (typeof images !== 'undefined' ? images : [])) {
+        if (isVisible(img)) img.draw(ctx, camX, camY);
+    }
+    for (let p of (typeof platforms !== 'undefined' ? platforms : [])) {
+        if (isVisible(p)) p.draw(ctx, camX, camY);
+    }
+    for (let spike of (typeof spikes !== 'undefined' ? spikes : [])) {
+        if (isVisible(spike)) spike.draw(ctx, camX, camY);
+    }
+    for (let c of (typeof coins !== 'undefined' ? coins : [])) {
+        if (isVisible(c)) c.draw(ctx, camX, camY);
+    }
+    for (let hp of (typeof healthPotions !== 'undefined' ? healthPotions : [])) {
+        if (isVisible(hp)) hp.draw(ctx, camX, camY);
+    }
+    for (let ch of (typeof chests !== 'undefined' ? chests : [])) {
+        if (isVisible(ch)) ch.draw(ctx, camX, camY);
+    }
+    if (typeof portal !== 'undefined' && portal && isVisible(portal)) portal.draw(ctx, camX, camY);
 
     // Draw Entities
-    for (let e of (typeof enemies !== 'undefined' ? enemies : [])) e.draw(ctx, camX, camY);
+    for (let e of (typeof enemies !== 'undefined' ? enemies : [])) {
+        if (isVisible(e)) e.draw(ctx, camX, camY);
+    }
     if (typeof player !== 'undefined' && player) player.draw(ctx, camX, camY);
 
     // Draw Particles
-    for (let p of (typeof particles !== 'undefined' ? particles : [])) p.draw(ctx, camX, camY);
+    for (let p of (typeof particles !== 'undefined' ? particles : [])) {
+        if (isVisible(p)) p.draw(ctx, camX, camY);
+    }
 
     if (typeof input !== 'undefined' && input && input.map) {
         drawMap(ctx);

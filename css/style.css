@@ -155,11 +155,13 @@ button:active {
 
 .main-menu-buttons {
     position: absolute;
-    bottom: 20%; /* Angkat sedikit ke tengah karena tulisan MAIN MENU hilang */
+    bottom: 15%;
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: clamp(10px, 2vw, 30px);
     width: 100%;
+    padding: 0 5%;
+    flex-wrap: wrap;
 }
 
 .level-select-grid {
@@ -169,8 +171,10 @@ button:active {
     transform: translate(-50%, -45%);
     display: flex;
     justify-content: center;
-    gap: 40px;
-    width: 90%;
+    align-items: center;
+    gap: clamp(10px, 3vw, 40px);
+    width: 95%;
+    max-height: 80vh;
 }
 
 .img-button {
@@ -181,7 +185,8 @@ button:active {
 }
 
 .main-menu-buttons .img-button {
-    height: 90px; /* Diperbesar dari 60px */
+    height: clamp(50px, 15vh, 90px);
+    max-width: 30vw;
 }
 
 .img-button:hover {
@@ -194,7 +199,9 @@ button:active {
 }
 
 .level-card {
-    height: 420px; /* Diperbesar dari 300px */
+    height: clamp(150px, 65vh, 420px);
+    max-width: 30vw;
+    object-fit: contain;
 }
 
 .level-card.disabled {
@@ -211,7 +218,7 @@ button:active {
     position: absolute;
     bottom: 4%;
     left: 3%;
-    height: 70px; /* Diperbesar dari 50px */
+    height: clamp(40px, 10vh, 70px);
 }
 
 /* Loading Screen */

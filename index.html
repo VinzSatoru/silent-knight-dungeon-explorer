@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Silent Knight Dungeon Explorer</title>
+    <!-- Favicon and App Icon -->
+    <link rel="icon" type="image/jpeg" href="assets/game_logo.jpg">
+    <link rel="apple-touch-icon" href="assets/game_logo.jpg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/style.css?v=7">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Main Game Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- UI Overlays -->
+        <div id="ui-layer">
+            <!-- HUD (Heads Up Display) -->
+            <div id="hud" class="hidden">
+                <div class="hud-top-left">
+                    <div class="health-bar-container">
+                        <div class="health-icon">❤️</div>
+                        <div class="health-bar-wrapper">
+                            <div class="health-bar-fill" id="health-fill"></div>
+                        </div>
+                        <div class="health-text"><span id="health-value">1000</span></div>
+                    </div>
+                </div>
+                <div class="hud-top-right">
+                    <div class="stat-box">
+                        <span class="icon">🔑</span> <span id="keys-value">0</span>
+                    </div>
+                    <div class="stat-box coin-box-bg">
+                        <span id="score-value" class="img-stat-text">0</span>
+                    </div>
+                    <button id="btn-settings" class="hud-settings-btn" style="background:transparent; border:none; padding:0;">
+                        <img src="assets/pop_up/settings_btn.png" alt="Settings" style="height: 100%; width: auto;">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div id="mobile-controls" class="hidden">
+                <div class="controls-left">
+                    <button id="btn-left" class="control-btn">⬅️</button>
+                    <button id="btn-right" class="control-btn">➡️</button>
+                </div>
+                <div class="controls-right">
+                    <button id="btn-jump" class="control-btn">⬆️</button>
+                    <button id="btn-attack" class="control-btn">⚔️</button>
+                </div>
+            </div>
+
+            <!-- Initial Loading Screen (Before Main Menu) -->
+            <div id="initial-loading-screen" class="screen active">
+                <div class="menu-image-container">
+                    <img src="assets/background/initial_loading_bg.png" alt="Loading" class="bg-image">
+                    <div class="initial-loading-container">
+                        <div class="initial-loading-bar"><div class="initial-loading-fill" id="initial-loading-fill"></div></div>
+                        <h3 class="initial-loading-text" id="initial-loading-text">Loading Assets... 0%</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Menu Screen -->
+            <div id="main-menu" class="screen hidden">
+                <div class="menu-image-container">
+                    <img src="assets/main_menu/mainmenu.png" alt="Main Menu" class="bg-image">
+                    <div class="main-menu-buttons">
+                        <img src="assets/main_menu/play_btn.png" id="btn-play-img" class="img-button" alt="Play">
+                        <img src="assets/main_menu/hint_btn.png" id="btn-hint-img" class="img-button" alt="Hint">
+                        <img src="assets/main_menu/credits_btn.png" id="btn-credits-img" class="img-button" alt="Credits">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level Select Screen -->
+            <div id="level-select-screen" class="screen hidden">
+                <div class="menu-image-container">
+                    <img src="assets/level menu/level_menu_bg.png" alt="Level Select" class="bg-image">
+                    <div class="level-select-grid">
+                        <img src="assets/level menu/level1_menu.png" id="btn-level-1-img" class="img-button level-card" alt="Level 1">
+                        <img src="assets/level menu/level2_menu.png" id="btn-level-2-img" class="img-button level-card disabled" alt="Level 2">
+                        <img src="assets/level menu/level3_menu.png" id="btn-level-3-img" class="img-button level-card disabled" alt="Level 3">
+                    </div>
+                    <img src="assets/level menu/backtomainmenu_btn.png" id="btn-level-back-img" class="img-button back-btn" alt="Back">
+                </div>
+            </div>
+
+            <!-- Loading Screen -->
+            <div id="loading-screen" class="screen hidden">
+                <div class="loading-container">
+                    <h2 class="loading-text">ENTERING DUNGEON...</h2>
+                    <div class="loading-bar"><div class="loading-fill" id="loading-fill"></div></div>
+                </div>
+            </div>
+
+            <!-- Level Complete / Game Over Screen -->
+            <div id="end-screen" class="screen hidden">
+                <div id="end-popup-bg" class="end-popup-wrapper">
+                    <h2 id="end-title">LEVEL COMPLETE!</h2>
+                    <div class="stars-container" id="stars-container">
+                        <span class="star" id="star-1">⭐</span>
+                        <span class="star" id="star-2">⭐</span>
+                        <span class="star" id="star-3">⭐</span>
+                    </div>
+                    <div class="score-display" id="score-display">
+                        Score: <span id="final-score">0</span>
+                    </div>
+                    <div class="end-buttons">
+                        <button id="btn-next-level" class="primary-btn hidden">NEXT LEVEL</button>
+                        <button id="btn-restart" class="secondary-btn">RESTART</button>
+                        <button id="btn-home" class="tertiary-btn">MAIN MENU</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Screen -->
+            <div id="settings-screen" class="screen hidden">
+                <div class="popup-border-bg settings-layout">
+                    <button id="btn-resume" class="close-btn">✕</button>
+                    
+                    <h2>⚙ SETTINGS</h2>
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-options">
+                        <div class="settings-row">
+                            <span>🔊 MUSIC</span>
+                            <button id="btn-toggle-music" class="settings-toggle-btn active-toggle">ON</button>
+                        </div>
+                        <div class="settings-row">
+                            <span>⛶ FULLSCREEN</span>
+                            <button id="btn-fullscreen-img" class="settings-toggle-btn">TOGGLE</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-bottom-divider"></div>
+
+                    <div class="settings-bottom-buttons">
+                        <button id="btn-restart-settings" class="secondary-btn">↻ RESTART LEVEL</button>
+                        <button id="btn-home-settings" class="tertiary-btn">⌂ MAIN MENU</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Scripts -->
+    <script src="js/input.js?v=8"></script>
+    <script src="js/physics.js?v=8"></script>
+    <script src="js/environment.js?v=8"></script>
+    <script src="js/entities.js?v=8"></script>
+    <script src="js/main.js?v=8"></script>
+
+    <!-- Service Worker Registration for PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(registration => {
+                    console.log('ServiceWorker registered successfully with scope: ', registration.scope);
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "Silent Knight Dungeon Explorer",
+  "short_name": "Silent Knight",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "background_color": "#08080d",
+  "theme_color": "#5a1e7d",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "assets/game_logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "assets/game_logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

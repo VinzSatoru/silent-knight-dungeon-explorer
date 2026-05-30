@@ -1,0 +1,10 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Ignore this folder if testing PWA locally with temp files
+.tempmediaStorage/
+scratch/

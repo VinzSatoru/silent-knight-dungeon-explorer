@@ -155,26 +155,22 @@ class PlatformLvl3 extends Platform {
         ctx.rect(sx, sy, this.width, this.height);
         ctx.clip();
 
-        // Gambar retakan organik menyala (Optimized Fake Glow without shadowBlur)
+        // Gambar retakan organik menyala
+        ctx.strokeStyle = `rgba(180, 0, 255, ${0.3 + glowIntensity * 0.7})`;
+        ctx.lineWidth = 1.5 + glowIntensity;
+        ctx.shadowBlur = 5 + glowIntensity * 12;
+        ctx.shadowColor = '#d800ff';
+
         for (let crack of this.cracks) {
             ctx.beginPath();
             ctx.moveTo(sx + crack[0].x, sy + crack[0].y);
             for (let j = 1; j < crack.length; j++) {
                 ctx.lineTo(sx + crack[j].x, sy + crack[j].y);
             }
-            
-            // 1. Thick transparent stroke (Fake Blur)
-            ctx.strokeStyle = `rgba(180, 0, 255, ${0.15 + glowIntensity * 0.2})`;
-            ctx.lineWidth = 4 + glowIntensity * 2;
-            ctx.stroke();
-
-            // 2. Thin bright core
-            ctx.strokeStyle = `rgba(216, 0, 255, ${0.5 + glowIntensity * 0.5})`;
-            ctx.lineWidth = 1.5;
             ctx.stroke();
         }
 
-        ctx.restore(); // Hapus clip
+        ctx.restore(); // Hapus bayangan/glow agar tidak mempengaruhi sisi lainnya
 
         // Garis atas api ungu
         ctx.fillStyle = `rgba(138, 43, 226, ${0.7 + glowIntensity * 0.3})`;
@@ -354,11 +350,8 @@ class Portal {
         this.glowTimer += 0.03;
         let glow = Math.abs(Math.sin(this.glowTimer));
 
-        // Fake Outer Glow
-        ctx.fillStyle = `rgba(255, 215, 0, ${0.2 + glow * 0.1})`;
-        ctx.beginPath();
-        ctx.roundRect(sx - 10 - glow*4, sy - 10 - glow*4, this.width + 20 + glow*8, this.height + 20 + glow*8, 15);
-        ctx.fill();
+        ctx.shadowBlur = 15 + glow * 10;
+        ctx.shadowColor = 'rgba(255, 215, 0, 0.5)';
 
         ctx.fillStyle = '#333';
         ctx.beginPath();

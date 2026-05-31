@@ -675,11 +675,9 @@ class EnemyLvl3 extends EnemyLvl2 {
                 ctx.transform(1, 0, skew, 1, 0, 0);
             }
 
-            // Fake Outer Aura Glow (Optimized for Mobile)
-            ctx.fillStyle = 'rgba(216, 0, 255, 0.3)';
-            ctx.beginPath();
-            ctx.arc(0, -4, 18 + Math.sin(time)*4, 0, Math.PI*2);
-            ctx.fill();
+            // Outer Aura Glow
+            ctx.shadowBlur = 15 + Math.sin(time)*5;
+            ctx.shadowColor = '#d800ff';
             
             // Lidah Api (Flames)
             for (let i = 0; i < 5; i++) {
@@ -696,13 +694,15 @@ class EnemyLvl3 extends EnemyLvl2 {
             }
 
             // Solid Core
-            ctx.fillStyle = '#ff66ff';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'white';
             ctx.fillStyle = '#ff66ff';
             ctx.beginPath();
             ctx.arc(0, -4, 7 + Math.sin(time*3)*1.5, 0, Math.PI*2);
             ctx.fill();
 
             // Mata
+            ctx.shadowBlur = 0;
             ctx.fillStyle = 'white';
             let eyeOffsetX = (this.vx > 0 ? 3 : (this.vx < 0 ? -3 : 0));
             ctx.beginPath();
@@ -729,14 +729,10 @@ class EnemyLvl3 extends EnemyLvl2 {
                 ctx.transform(1, 0, skew, 1, 0, 0);
             }
 
-            // Fake Glow (Optimized)
-            ctx.fillStyle = 'rgba(216, 0, 255, 0.2)';
-            ctx.beginPath();
-            ctx.arc(0, 10, 30, 0, Math.PI*2);
-            ctx.fill();
-
             // Tentakel Bayangan (Menggeliat ke bawah)
             ctx.strokeStyle = 'rgba(138, 43, 226, 0.9)';
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#d800ff';
             ctx.lineCap = 'round';
             for (let i = 0; i < 6; i++) {
                 ctx.lineWidth = 4 - i * 0.4;
@@ -757,16 +753,16 @@ class EnemyLvl3 extends EnemyLvl2 {
             }
 
             // Inti Energi (Core)
-            ctx.fillStyle = 'rgba(216, 0, 255, 0.4)';
-            ctx.beginPath();
-            ctx.arc(0, 0, 20 + Math.sin(time*2)*3, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.shadowBlur = 25 + Math.sin(time * 4) * 10;
+            ctx.shadowColor = '#d800ff';
             ctx.fillStyle = '#ff66ff';
             ctx.beginPath();
             ctx.arc(0, 0, 14 + Math.sin(time*2)*2, 0, Math.PI * 2);
             ctx.fill();
 
             // Puing-puing Obsidian (Batu melayang yang berotasi)
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#8a2be2';
             ctx.fillStyle = '#0f0514'; 
             ctx.strokeStyle = '#d800ff';
             ctx.lineWidth = 1.5;

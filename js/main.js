@@ -123,22 +123,45 @@ const audioManager = {
     attack: new Audio('assets/sound/sword-slash.mp3'),
     isMusicOn: true,
     isSfxOn: true,
+    bgmVolume: 0.5,
+    sfxVolume: 1.0,
 
     init() {
         this.bgm = this.bgm1;
-        this.bgm1.loop = true; this.bgm1.volume = 0.5;
-        this.bgm2.loop = true; this.bgm2.volume = 0.5;
-        this.bgm3.loop = true; this.bgm3.volume = 0.5;
+        this.bgm1.loop = true;
+        this.bgm2.loop = true;
+        this.bgm3.loop = true;
         this.run.loop = true;
-        this.run.volume = 0.3;
+        this.setBGMVolume(this.bgmVolume);
+        this.setSFXVolume(this.sfxVolume);
+    },
 
-        this.coin.volume = 0.6;
-        this.jump.volume = 0.4;
-        this.attack.volume = 0.5;
-        this.chest.volume = 0.8;
-        this.dead.volume = 0.7;
-        this.levelComplete.volume = 0.8;
-        this.click.volume = 1.0;
+    setBGMVolume(val) {
+        this.bgmVolume = val;
+        this.isMusicOn = val > 0;
+        this.bgm1.volume = val;
+        this.bgm2.volume = val;
+        this.bgm3.volume = val;
+        if(this.bgm) this.bgm.volume = val;
+        
+        if (this.isMusicOn && gameState === 'PLAYING' && this.bgm.paused) {
+            this.bgm.play().catch(e => { });
+        } else if (!this.isMusicOn && this.bgm && !this.bgm.paused) {
+            this.bgm.pause();
+        }
+    },
+
+    setSFXVolume(val) {
+        this.sfxVolume = val;
+        this.isSfxOn = val > 0;
+        this.run.volume = val * 0.3;
+        this.coin.volume = val * 0.6;
+        this.jump.volume = val * 0.4;
+        this.attack.volume = val * 0.5;
+        this.chest.volume = val * 0.8;
+        this.dead.volume = val * 0.7;
+        this.levelComplete.volume = val * 0.8;
+        this.click.volume = val * 1.0;
     },
 
     playBGM() {
@@ -150,22 +173,13 @@ const audioManager = {
         else if (currentLevel === 3) this.bgm = this.bgm3;
         
         this.bgm.currentTime = 0;
+        this.bgm.volume = this.bgmVolume;
         this.bgm.play().catch(e => console.log('BGM blocked'));
     },
 
     stopBGM() {
         this.bgm.pause();
         this.bgm.currentTime = 0;
-    },
-
-    toggleMusic(state) {
-        this.isMusicOn = state;
-        this.isSfxOn = state; // Asumsi toggle settings mematikan semua suara
-        if (this.isMusicOn && gameState === 'PLAYING') {
-            this.bgm.play().catch(e => { });
-        } else {
-            this.bgm.pause();
-        }
     },
 
     playSFX(name) {
@@ -273,6 +287,11 @@ const btnSettings = document.getElementById('btn-settings');
 const btnResume = document.getElementById('btn-resume');
 const btnHintClose = document.getElementById('btn-hint-close');
 const btnCreditsClose = document.getElementById('btn-credits-close');
+const btnSettingsMainImg = document.getElementById('btn-settings-main-img');
+const sliderBgm = document.getElementById('slider-bgm');
+const sliderSfx = document.getElementById('slider-sfx');
+const settingsBottomButtons = document.getElementById('settings-bottom-buttons');
+const settingsBottomDivider = document.getElementById('settings-bottom-divider');
 const btnToggleMusic = document.getElementById('btn-toggle-music');
 const btnRestartSettings = document.getElementById('btn-restart-settings');
 const btnHomeSettings = document.getElementById('btn-home-settings');
@@ -396,19 +415,31 @@ btnHome.addEventListener('click', () => { audioManager.playSFX('click'); goToMen
 btnSettings.addEventListener('click', () => {
     audioManager.playSFX('click');
     gameState = 'PAUSED';
+    if(settingsBottomButtons) settingsBottomButtons.style.display = 'flex';
+    if(settingsBottomDivider) settingsBottomDivider.style.display = 'block';
     settingsScreen.classList.remove('hidden');
     settingsScreen.classList.add('active');
     hud.classList.add('hidden');
+});
+
+if(btnSettingsMainImg) btnSettingsMainImg.addEventListener('click', () => {
+    audioManager.playSFX('click');
+    if(settingsBottomButtons) settingsBottomButtons.style.display = 'none';
+    if(settingsBottomDivider) settingsBottomDivider.style.display = 'none';
+    settingsScreen.classList.remove('hidden');
+    settingsScreen.classList.add('active');
 });
 
 btnResume.addEventListener('click', () => {
     audioManager.playSFX('click');
     settingsScreen.classList.remove('active');
     settingsScreen.classList.add('hidden');
-    hud.classList.remove('hidden');
-    gameState = 'PLAYING';
-    lastTime = performance.now();
-    requestAnimationFrame(gameLoop);
+    if (gameState === 'PAUSED') {
+        hud.classList.remove('hidden');
+        gameState = 'PLAYING';
+        lastTime = performance.now();
+        requestAnimationFrame(gameLoop);
+    }
 });
 
 btnRestartSettings.addEventListener('click', () => {
@@ -425,13 +456,20 @@ btnHomeSettings.addEventListener('click', () => {
     goToMenu();
 });
 
-btnToggleMusic.addEventListener('click', () => {
-    audioManager.playSFX('click');
-    isMusicOn = !isMusicOn;
-    btnToggleMusic.innerText = isMusicOn ? 'ON' : 'OFF';
-    btnToggleMusic.classList.toggle('active-toggle', isMusicOn);
-    audioManager.toggleMusic(isMusicOn);
-});
+if(sliderBgm) {
+    sliderBgm.addEventListener('input', (e) => {
+        audioManager.setBGMVolume(parseFloat(e.target.value));
+    });
+}
+
+if(sliderSfx) {
+    sliderSfx.addEventListener('input', (e) => {
+        audioManager.setSFXVolume(parseFloat(e.target.value));
+    });
+    sliderSfx.addEventListener('change', () => {
+        if(audioManager.sfxVolume > 0) audioManager.playSFX('click');
+    });
+}
 
 function goToMenu() {
     gameState = 'MENU';

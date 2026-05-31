@@ -83,6 +83,7 @@
                         <img src="assets/main_menu/play_btn.png" id="btn-play-img" class="img-button" alt="Play">
                         <img src="assets/main_menu/hint_btn.png" id="btn-hint-img" class="img-button" alt="Hint">
                         <img src="assets/main_menu/credits_btn.png" id="btn-credits-img" class="img-button" alt="Credits">
+                        <img src="assets/pop_up/settings_btn.png" id="btn-settings-main-img" class="img-button" alt="Settings">
                     </div>
                 </div>
             </div>
@@ -130,26 +131,26 @@
 
             <!-- Hint Screen -->
             <div id="hint-screen" class="screen hidden">
-                <div class="popup-border-bg settings-layout" style="width: clamp(280px, 90vw, 600px); aspect-ratio: auto; min-height: clamp(300px, 80vh, 500px);">
+                <div class="popup-border-bg settings-layout hint-credits-popup">
                     <button id="btn-hint-close" class="close-btn">✕</button>
-                    <h2 style="font-size: clamp(16px, 4vw, 24px);">💡 HINTS & TIPS</h2>
+                    <h2>💡 HINTS & TIPS</h2>
                     <div class="settings-divider"></div>
-                    <div class="scrollable-content" style="color: white; font-size: clamp(10px, 2.5vw, 14px); text-align: left; line-height: 1.5; overflow-y: auto; padding: 10px; max-height: 60vh;">
-                        <p><b>General Tips:</b></p>
-                        <p>⚔️ Attack enemies right before they hit you to PARRY (Reduces damage by 50%).</p>
-                        <p>🗺️ Use the MAP button on the HUD to see the world layout.</p><br>
+                    <div class="inner-popup-content scrollable-content text-left">
+                        <p class="text-highlight">General Tips:</p>
+                        <p>⚔️ Attack right before getting hit to PARRY (50% DMG reduction).</p>
+                        <p>🗺️ Use the MAP button to see the world layout.</p>
                         
-                        <p><b>Level 1 Mobs:</b></p>
+                        <p class="text-highlight">Level 1 Mobs:</p>
                         <p>🐌 Snail: 100 HP | 50 DMG</p>
-                        <p>🐝 Bee: 100 HP | 40 DMG (Flying)</p>
-                        <p>🐗 Boar: 150 HP | 75 DMG (Fast)</p><br>
+                        <p>🐝 Bee: 100 HP | 40 DMG</p>
+                        <p>🐗 Boar: 150 HP | 75 DMG</p>
                         
-                        <p><b>Level 2 Mobs:</b></p>
+                        <p class="text-highlight">Level 2 Mobs:</p>
                         <p>❄️ Ice Slime: 120 HP | 50 DMG</p>
-                        <p>👻 Anomaly (Ghost): 200 HP | 80 DMG</p><br>
+                        <p>👻 Ghost: 200 HP | 80 DMG</p>
                         
-                        <p><b>Level 3 Mobs:</b></p>
-                        <p>🔮 Void Spark (Fast): 150 HP | 80 DMG</p>
+                        <p class="text-highlight">Level 3 Mobs:</p>
+                        <p>🔮 Void Spark: 150 HP | 80 DMG</p>
                         <p>🪨 Obsidian Revenant: 300 HP | 120 DMG</p>
                     </div>
                 </div>
@@ -157,19 +158,19 @@
 
             <!-- Credits Screen -->
             <div id="credits-screen" class="screen hidden">
-                <div class="popup-border-bg settings-layout" style="aspect-ratio: auto; min-height: 350px;">
+                <div class="popup-border-bg settings-layout hint-credits-popup">
                     <button id="btn-credits-close" class="close-btn">✕</button>
                     <h2>📜 CREDITS</h2>
                     <div class="settings-divider"></div>
-                    <div style="color: white; font-size: clamp(10px, 3vw, 14px); text-align: center; line-height: 1.8; margin-top: 10px;">
-                        <p style="color: #e5a93d;"><b>Developer</b></p>
-                        <p>Ahmad / VinzSatoru</p><br>
-                        <p style="color: #e5a93d;"><b>Game Engine</b></p>
-                        <p>Vanilla JavaScript & Canvas API</p><br>
-                        <p style="color: #e5a93d;"><b>Assets</b></p>
-                        <p>itch.io (Level 1 tiles and mobs)</p><br>
-                        <p style="color: #e5a93d;"><b>AI Assistant</b></p>
-                        <p>Google DeepMind Antigravity</p>
+                    <div class="inner-popup-content scrollable-content text-center">
+                        <p class="text-highlight">Developer</p>
+                        <p>Ahmad / VinzSatoru</p>
+                        <p class="text-highlight">Game Engine</p>
+                        <p>Vanilla JavaScript & Canvas</p>
+                        <p class="text-highlight">Assets</p>
+                        <p>itch.io (Level 1 tiles & mobs)</p>
+                        <p class="text-highlight">AI Assistant</p>
+                        <p>DeepMind Antigravity</p>
                     </div>
                 </div>
             </div>
@@ -183,9 +184,13 @@
                     <div class="settings-divider"></div>
 
                     <div class="settings-options">
-                        <div class="settings-row">
-                            <span>🔊 MUSIC</span>
-                            <button id="btn-toggle-music" class="settings-toggle-btn active-toggle">ON</button>
+                        <div class="settings-row audio-row">
+                            <span>🎵 BGM</span>
+                            <input type="range" id="slider-bgm" class="custom-slider" min="0" max="1" step="0.05" value="0.5">
+                        </div>
+                        <div class="settings-row audio-row">
+                            <span>🔊 SFX</span>
+                            <input type="range" id="slider-sfx" class="custom-slider" min="0" max="1" step="0.05" value="1.0">
                         </div>
                         <div class="settings-row">
                             <span>⛶ FULLSCREEN</span>
@@ -193,9 +198,9 @@
                         </div>
                     </div>
 
-                    <div class="settings-bottom-divider"></div>
+                    <div class="settings-bottom-divider" id="settings-bottom-divider"></div>
 
-                    <div class="settings-bottom-buttons">
+                    <div class="settings-bottom-buttons" id="settings-bottom-buttons">
                         <button id="btn-restart-settings" class="secondary-btn">↻ RESTART LEVEL</button>
                         <button id="btn-home-settings" class="tertiary-btn">⌂ MAIN MENU</button>
                     </div>

@@ -144,7 +144,7 @@ const audioManager = {
         this.bgm3.volume = val;
         if(this.bgm) this.bgm.volume = val;
         
-        if (this.isMusicOn && gameState === 'PLAYING' && this.bgm.paused) {
+        if (this.isMusicOn && (gameState === 'PLAYING' || gameState === 'PAUSED') && this.bgm.paused) {
             this.bgm.play().catch(e => { });
         } else if (!this.isMusicOn && this.bgm && !this.bgm.paused) {
             this.bgm.pause();

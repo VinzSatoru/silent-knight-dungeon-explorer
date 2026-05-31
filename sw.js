@@ -1,4 +1,4 @@
-const CACHE_NAME = 'silent-knight-v3';
+const CACHE_NAME = 'silent-knight-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

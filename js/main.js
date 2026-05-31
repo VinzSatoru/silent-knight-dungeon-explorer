@@ -251,6 +251,8 @@ const mobileControls = document.getElementById('mobile-controls');
 const endScreen = document.getElementById('end-screen');
 const endTitle = document.getElementById('end-title');
 const btnPlayImg = document.getElementById('btn-play-img');
+const btnHintImg = document.getElementById('btn-hint-img');
+const btnCreditsImg = document.getElementById('btn-credits-img');
 const btnLevel1Img = document.getElementById('btn-level-1-img');
 const btnLevel2Img = document.getElementById('btn-level-2-img'); // New Level 2 button
 const btnLevel3Img = document.getElementById('btn-level-3-img'); // New Level 3 button
@@ -263,10 +265,14 @@ const keysValue = document.getElementById('keys-value');
 const healthFill = document.getElementById('health-fill');
 const healthValue = document.getElementById('health-value');
 
-// Referensi DOM Settings
+// Referensi DOM Settings & Menus
 const settingsScreen = document.getElementById('settings-screen');
+const hintScreen = document.getElementById('hint-screen');
+const creditsScreen = document.getElementById('credits-screen');
 const btnSettings = document.getElementById('btn-settings');
 const btnResume = document.getElementById('btn-resume');
+const btnHintClose = document.getElementById('btn-hint-close');
+const btnCreditsClose = document.getElementById('btn-credits-close');
 const btnToggleMusic = document.getElementById('btn-toggle-music');
 const btnRestartSettings = document.getElementById('btn-restart-settings');
 const btnHomeSettings = document.getElementById('btn-home-settings');
@@ -275,6 +281,30 @@ const btnHomeSettings = document.getElementById('btn-home-settings');
 let isMusicOn = true;
 
 // Event Listener Tombol Menu
+if(btnHintImg) btnHintImg.addEventListener('click', () => {
+    audioManager.playSFX('click');
+    hintScreen.classList.remove('hidden');
+    hintScreen.classList.add('active');
+});
+
+if(btnHintClose) btnHintClose.addEventListener('click', () => {
+    audioManager.playSFX('click');
+    hintScreen.classList.remove('active');
+    hintScreen.classList.add('hidden');
+});
+
+if(btnCreditsImg) btnCreditsImg.addEventListener('click', () => {
+    audioManager.playSFX('click');
+    creditsScreen.classList.remove('hidden');
+    creditsScreen.classList.add('active');
+});
+
+if(btnCreditsClose) btnCreditsClose.addEventListener('click', () => {
+    audioManager.playSFX('click');
+    creditsScreen.classList.remove('active');
+    creditsScreen.classList.add('hidden');
+});
+
 btnPlayImg.addEventListener('click', () => {
     audioManager.playSFX('click');
 

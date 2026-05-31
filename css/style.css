@@ -706,3 +706,57 @@ button:active {
     /* If you only want mobile controls on small screens */
     /* #mobile-controls { display: none !important; } */
 }
+
+/* ========================================= */
+/* ORIENTATION LOCK (LANDSCAPE ENFORCEMENT) */
+/* ========================================= */
+#orientation-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    z-index: 99999;
+    color: #e5a93d;
+    font-family: 'Press Start 2P', sans-serif;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.orientation-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.rotate-icon {
+    font-size: 60px;
+    animation: rotateAnim 2s infinite ease-in-out;
+}
+
+@keyframes rotateAnim {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(-90deg); }
+    100% { transform: rotate(-90deg); }
+}
+
+#orientation-warning p {
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: 2px;
+}
+
+/* Detect Portrait on Mobile Devices */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    #game-container, #ui-layer {
+        display: none !important;
+    }
+    #orientation-warning {
+        display: flex !important;
+    }
+}

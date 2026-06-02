@@ -1,6 +1,6 @@
 // js/physics.js
 // Mengatur konstanta fisika dasar
-const GRAVITY = 0.14; // Sedikit floaty seperti Construct 2
+const GRAVITY = 0.09; // Diperkecil agar lebih lama di udara (hang time)
 const TERMINAL_VELOCITY = 20;
 
 function applyPhysics(entity, platforms) {

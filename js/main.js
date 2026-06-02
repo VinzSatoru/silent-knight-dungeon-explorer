@@ -6,7 +6,7 @@ const ctx = canvas.getContext('2d');
 
 // === HD Dynamic Resolution ===
 // Resolusi internal canvas mengikuti ukuran layar
-const BASE_HEIGHT = 450; // Tinggi logis dunia game
+let BASE_HEIGHT = 370; // Tinggi logis dunia game (diperkecil agar kamera lebih dekat/zoom)
 let SCALE_FACTOR = 1;
 
 function resizeCanvas() {
@@ -142,8 +142,8 @@ const audioManager = {
         this.bgm1.volume = val;
         this.bgm2.volume = val;
         this.bgm3.volume = val;
-        if(this.bgm) this.bgm.volume = val;
-        
+        if (this.bgm) this.bgm.volume = val;
+
         if (this.isMusicOn && (gameState === 'PLAYING' || gameState === 'PAUSED') && this.bgm.paused) {
             this.bgm.play().catch(e => { });
         } else if (!this.isMusicOn && this.bgm && !this.bgm.paused) {
@@ -167,11 +167,11 @@ const audioManager = {
     playBGM() {
         if (!this.isMusicOn) return;
         if (this.bgm) this.bgm.pause();
-        
+
         if (currentLevel === 1) this.bgm = this.bgm1;
         else if (currentLevel === 2) this.bgm = this.bgm2;
         else if (currentLevel === 3) this.bgm = this.bgm3;
-        
+
         this.bgm.currentTime = 0;
         this.bgm.volume = this.bgmVolume;
         this.bgm.play().catch(e => console.log('BGM blocked'));
@@ -290,6 +290,7 @@ const btnCreditsClose = document.getElementById('btn-credits-close');
 const btnSettingsMainImg = document.getElementById('btn-settings-main-img');
 const sliderBgm = document.getElementById('slider-bgm');
 const sliderSfx = document.getElementById('slider-sfx');
+const sliderZoom = document.getElementById('slider-zoom');
 const settingsBottomButtons = document.getElementById('settings-bottom-buttons');
 const settingsBottomDivider = document.getElementById('settings-bottom-divider');
 const btnToggleMusic = document.getElementById('btn-toggle-music');
@@ -300,25 +301,25 @@ const btnHomeSettings = document.getElementById('btn-home-settings');
 let isMusicOn = true;
 
 // Event Listener Tombol Menu
-if(btnHintImg) btnHintImg.addEventListener('click', () => {
+if (btnHintImg) btnHintImg.addEventListener('click', () => {
     audioManager.playSFX('click');
     hintScreen.classList.remove('hidden');
     hintScreen.classList.add('active');
 });
 
-if(btnHintClose) btnHintClose.addEventListener('click', () => {
+if (btnHintClose) btnHintClose.addEventListener('click', () => {
     audioManager.playSFX('click');
     hintScreen.classList.remove('active');
     hintScreen.classList.add('hidden');
 });
 
-if(btnCreditsImg) btnCreditsImg.addEventListener('click', () => {
+if (btnCreditsImg) btnCreditsImg.addEventListener('click', () => {
     audioManager.playSFX('click');
     creditsScreen.classList.remove('hidden');
     creditsScreen.classList.add('active');
 });
 
-if(btnCreditsClose) btnCreditsClose.addEventListener('click', () => {
+if (btnCreditsClose) btnCreditsClose.addEventListener('click', () => {
     audioManager.playSFX('click');
     creditsScreen.classList.remove('active');
     creditsScreen.classList.add('hidden');
@@ -415,17 +416,17 @@ btnHome.addEventListener('click', () => { audioManager.playSFX('click'); goToMen
 btnSettings.addEventListener('click', () => {
     audioManager.playSFX('click');
     gameState = 'PAUSED';
-    if(settingsBottomButtons) settingsBottomButtons.style.display = 'flex';
-    if(settingsBottomDivider) settingsBottomDivider.style.display = 'block';
+    if (settingsBottomButtons) settingsBottomButtons.style.display = 'flex';
+    if (settingsBottomDivider) settingsBottomDivider.style.display = 'block';
     settingsScreen.classList.remove('hidden');
     settingsScreen.classList.add('active');
     hud.classList.add('hidden');
 });
 
-if(btnSettingsMainImg) btnSettingsMainImg.addEventListener('click', () => {
+if (btnSettingsMainImg) btnSettingsMainImg.addEventListener('click', () => {
     audioManager.playSFX('click');
-    if(settingsBottomButtons) settingsBottomButtons.style.display = 'none';
-    if(settingsBottomDivider) settingsBottomDivider.style.display = 'none';
+    if (settingsBottomButtons) settingsBottomButtons.style.display = 'none';
+    if (settingsBottomDivider) settingsBottomDivider.style.display = 'none';
     settingsScreen.classList.remove('hidden');
     settingsScreen.classList.add('active');
 });
@@ -456,18 +457,28 @@ btnHomeSettings.addEventListener('click', () => {
     goToMenu();
 });
 
-if(sliderBgm) {
+if (sliderBgm) {
     sliderBgm.addEventListener('input', (e) => {
         audioManager.setBGMVolume(parseFloat(e.target.value));
     });
 }
 
-if(sliderSfx) {
+if (sliderSfx) {
     sliderSfx.addEventListener('input', (e) => {
         audioManager.setSFXVolume(parseFloat(e.target.value));
     });
     sliderSfx.addEventListener('change', () => {
-        if(audioManager.sfxVolume > 0) audioManager.playSFX('click');
+        if (audioManager.sfxVolume > 0) audioManager.playSFX('click');
+    });
+}
+
+if (sliderZoom) {
+    sliderZoom.addEventListener('input', (e) => {
+        BASE_HEIGHT = parseInt(e.target.value);
+        resizeCanvas();
+        if (gameState === 'PAUSED' || gameState === 'PLAYING') {
+            drawGame(); // Gambar ulang seketika untuk melihat efek zoom secara real-time
+        }
     });
 }
 
@@ -617,7 +628,7 @@ function showEndScreen(title) {
         document.getElementById('star-1').classList.toggle('earned', stars >= 1);
         document.getElementById('star-2').classList.toggle('earned', stars >= 2);
         document.getElementById('star-3').classList.toggle('earned', stars >= 3);
-        
+
         if (currentLevel >= 3) {
             document.getElementById('btn-next-level').classList.add('hidden');
         } else {
@@ -778,7 +789,7 @@ function gameLoop(timestamp) {
             for (let spike of spikes) {
                 // Logic Culling: skip if too far from player
                 if (Math.abs(spike.x - player.x) > 1500) continue;
-                
+
                 if (spike.cooldown > 0) { spike.cooldown--; continue; }
                 if (checkCollision(player, spike)) {
                     player.takeDamage(spike.damage);
@@ -889,7 +900,7 @@ function drawGame() {
     let cullPadding = 300; // Ekstra 300px agar tidak ada efek pop-in
     let viewLeft = camX - cullPadding;
     let viewRight = camX + logicalWidth() + cullPadding;
-    
+
     // Helper function for culling
     function isVisible(obj) {
         if (!obj) return false;
@@ -1041,24 +1052,24 @@ window.addEventListener('load', () => {
     let initialLoadingText = document.getElementById('initial-loading-text');
     let initialLoadingScreen = document.getElementById('initial-loading-screen');
     let theMainMenu = document.getElementById('main-menu'); // avoid conflict with global mainMenu var
-    
+
     let progress = 0;
     let loadingInterval = setInterval(() => {
         // Simulasi progres acak agar terlihat natural
-        progress += Math.floor(Math.random() * 8) + 4; 
+        progress += Math.floor(Math.random() * 8) + 4;
         if (progress > 100) progress = 100;
-        
-        if(initialLoadingFill) initialLoadingFill.style.width = progress + '%';
-        if(initialLoadingText) initialLoadingText.innerText = 'Loading Assets... ' + progress + '%';
-        
+
+        if (initialLoadingFill) initialLoadingFill.style.width = progress + '%';
+        if (initialLoadingText) initialLoadingText.innerText = 'Loading Assets... ' + progress + '%';
+
         if (progress === 100) {
             clearInterval(loadingInterval);
             setTimeout(() => {
-                if(initialLoadingScreen) {
+                if (initialLoadingScreen) {
                     initialLoadingScreen.classList.remove('active');
                     initialLoadingScreen.classList.add('hidden');
                 }
-                if(theMainMenu) {
+                if (theMainMenu) {
                     theMainMenu.classList.remove('hidden');
                     theMainMenu.classList.add('active');
                 }

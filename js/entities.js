@@ -60,8 +60,8 @@ class Player {
 
         this.vx = 0;
         this.vy = 0;
-        this.speed = 1.5; // Kecepatan lari di darat (kembali normal)
-        this.jumpStrength = -5.5; // Lompatan tidak terlalu tinggi
+        this.speed = 1.2; // Kecepatan lari di darat (diperlambat sedikit)
+        this.jumpStrength = -4.4; // Lompatan disesuaikan dengan gravitasi baru agar tinggi max sama
         this.grounded = false;
         this.doubleJumps = 1;
         this.wasUpPressed = false;
